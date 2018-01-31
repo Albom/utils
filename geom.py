@@ -32,4 +32,4 @@ def geom(lat, long, year):
 	ss = r.text[r.text.index('<pre>')+5 : r.text.index('</pre>')].strip().split('\n')[5].strip().split(' ')
 	return (float(ss[0]), float(ss[-1]))
 
-print(geom(49, 36, 2018))
+print(geom(49.6754912, 36.2922004, 2018))
