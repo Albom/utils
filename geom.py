@@ -8,25 +8,28 @@ class CGM:
         self.headers = headers
         self.url = 'https://omniweb.gsfc.nasa.gov/cgi/vitmo/vitmo_model.cgi'
 
-    def geom(self, lat, long, year):
-
-        data = {
+        self.data = {
             'model': 'cgm',
             'format': '0',  # list
-            'year': str(year),
             'geo_flag': '1',  # Geocentric
-            'latitude': str(lat),
-            'longitude': str(long),
             'height': '0',  # height
             'profile': '1',  # height profile
             'start': '0.',
             'stop': '1.',
-            'step': '2.',
-            'vars': ['04', '05']  # [CGM  Latitude, deg; CGM Longitude, deg.]
+            'step': '2.'
         }
 
+    def geom(self, lat, long, year):
+
+        self.data['year'] = str(year)
+        self.data['latitude'] = str(lat)
+        self.data['longitude'] = str(long)
+
+        # [CGM  Latitude, deg; CGM Longitude, deg.]
+        self.data['vars'] = ['04', '05']
+
         r = requests.post(self.url,
-                          data=data,
+                          data=self.data,
                           proxies=self.proxies,
                           headers=self.headers)
 
