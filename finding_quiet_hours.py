@@ -7,9 +7,10 @@ Created on March 27, 2018
 from utils.dgd import DGD
 from datetime import date, timedelta
 
-if __name__ == '__main__':
 
-    data = DGD('./data/2018Q1_DGD.txt')
+def find_quiet(file_name):
+
+    data = DGD(file_name)
 
     hours = list()
     days = set()
@@ -34,5 +35,15 @@ if __name__ == '__main__':
     days = list(days)
     days.sort()
 
-    print(days)
-    print(hours)
+    return {'hours': hours, 'days': days}
+
+
+if __name__ == '__main__':
+
+    q = find_quiet('./data/2018Q1_DGD.txt')
+
+    days = q['days']
+    hours = q['hours']
+
+    print(len(days), days)
+    print(len(hours), hours)
