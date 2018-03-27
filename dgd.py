@@ -42,10 +42,18 @@ class DGD:
                            'planetary': self.planetary})
 
     def kp(self, date):
-        return self.planetary[date.isoformat()]['k']
+        try:
+            r = self.planetary[date.isoformat()]['k']
+        except Exception:
+            return None
+        return r
 
     def ap(self, date):
-        return self.planetary[date.isoformat()]['a']
+        try:
+            r = self.planetary[date.isoformat()]['a']
+        except Exception:
+            return None
+        return r
 
 
 if __name__ == '__main__':
@@ -53,5 +61,6 @@ if __name__ == '__main__':
     data = DGD('./data/2018Q1_DGD.txt')
     print(data.kp(datetime.date(2018, 1, 30)))
     print(data.ap(datetime.date(2018, 1, 30)))
+    print(data.ap(datetime.date(2019, 1, 30)))
 
     print(data.json())
