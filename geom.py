@@ -6,7 +6,7 @@ class CGM:
     def __init__(self, proxies={}, headers={}):
         self.proxies = proxies
         self.headers = headers
-        self.url = 'https://omniweb.gsfc.nasa.gov/cgi/vitmo/vitmo_model.cgi'
+        self.url = 'https://omniweb.gsfc.nasa.gov/cgi/vitmo/cgm_model.cgi'
 
         self.data = {
             'model': 'cgm',
@@ -19,11 +19,11 @@ class CGM:
             'step': '2.'
         }
 
-    def geom(self, lat, long, year):
+    def geom(self, lat, lon, year):
 
         self.data['year'] = str(year)
         self.data['latitude'] = str(lat)
-        self.data['longitude'] = str(long)
+        self.data['longitude'] = str(lon)
 
         # [CGM  Latitude, deg; CGM Longitude, deg.]
         self.data['vars'] = ['04', '05']
@@ -33,8 +33,12 @@ class CGM:
                           proxies=self.proxies,
                           headers=self.headers)
 
-        ss = r.text[r.text.index('<pre>') + 5: r.text.index('</pre>')]
-        ss = ss.strip().split('\n')[5].strip().split(' ')
+        try:
+            ss = r.text[r.text.index('<pre>') + 5: r.text.index('</pre>')]
+            ss = ss.strip().split('\n')[5].strip().split(' ')
+        except ValueError:
+            print(r.text)
+            return (None, None)
         return (float(ss[0]), float(ss[-1]))
 
 
@@ -48,6 +52,6 @@ if __name__ == '__main__':
                 'Connection': 'close',
             }
 
-    c = CGM()
+    c = CGM(headers=headers)
     for year in range(2010, 2019):
         print(year, c.geom(49.6754912, 36.2922004, year))
