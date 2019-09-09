@@ -1,3 +1,4 @@
+import requests
 from datetime import date
 
 
@@ -5,8 +6,14 @@ class APF107:
 
     def load(self, filename):
         data = []
-        with open(filename, 'r') as file:
-            lines = file.readlines()
+        
+        if filename.startswith('https://'):
+            r = requests.get(filename)
+            lines = r.text.split('\n')
+            lines = list(filter(lambda x: len(x) > 0, lines))
+        else:
+            with open(filename, 'r') as file:
+                lines = file.readlines()
 
         for line in lines:
             year = int(line[:3])
@@ -38,5 +45,11 @@ class APF107:
 
 if __name__ == '__main__':
     a = APF107()
+    
     data = a.load('./data/apf107.dat')
-    print(data)
+    print(len(data))
+    
+    url = ('https://'
+           'chain-new.chain-project.net/echaim_downloads/apf107.dat')
+    data = a.load(url)
+    print(len(data))
