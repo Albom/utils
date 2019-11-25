@@ -20,7 +20,7 @@ from filelist import FileList
 12      smlat   Solar-Magnetic latitude / deg                   31.415062
 """
 
-directory = './ne_ratio'
+directory = 'h:/Data/TOMION/2017/03'
 filenames = filter(lambda s: s.startswith(''), FileList.get(directory))
 
 data = list()
@@ -33,16 +33,22 @@ for name in filenames:
     if tmp:
         data.extend(tmp)
 
-lat = 37.8
-lon = 288.5
+lat = -44.7
+lon = 273.4
 dlat = 5
 dlon = 4
 
-filtered = filter(lambda d: abs(d[2]-lat)<=dlat and abs(d[10]-lon)<=dlon, data)
+filtered = filter(lambda d: abs(d[2]-lat)<=dlat and abs(d[10]-lon)<=dlon and abs(d[3]-1130)<50, data)
 
 with open('out.txt', 'wt') as file:
+    format_title = '{:19s}{:>8s}{:>8s}{:>8s}{:>8s}{:>8s}{:>8s}{:>16s}{:>16s}\n'
+    field_names = ['DateTime', 'UT', 'Lat', 'Lon', 'RealLat', 'RealLon', 'h0', 'ne', 'sne']
+    title = format_title.format(*field_names)
+    file.write(title)
     for d in filtered:
-        date = from_jd(d[0], fmt='mjd').replace(microsecond=0).isoformat()
-        format = '{:s}{:8.2f}{:8.2f}{:8.2f}{:8.2f}\n'
-        s = format.format(date, lat, lon, d[2], d[10])
+        date = from_jd(d[0], fmt='mjd').replace(microsecond=0)
+        format = '{:19s}{:8.2f}{:8.2f}{:8.2f}{:8.2f}{:8.2f}{:8.0f}{:16.6e}{:16.6e}\n'
+        m = 1.e+14/1.05
+        h = date.hour + date.minute/60.0 + date.second/3600.0
+        s = format.format(date.isoformat(), h, lat, lon, d[2], d[10], d[3], d[4]*m, d[5]*m)
         file.write(s)
