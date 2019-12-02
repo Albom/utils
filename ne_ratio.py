@@ -21,7 +21,7 @@ from filelist import FileList
 """
 
 directory = 'h:/Data/TOMION/2017/03'
-filenames = filter(lambda s: s.startswith(''), FileList.get(directory))
+filenames = filter(lambda s: s.startswith('ne_ratio'), FileList.get(directory))
 
 data = list()
 for name in filenames:
